@@ -12,6 +12,12 @@ var config = require('./src/config');
 var authRouter = require('./src/routes/auth');
 var dbRouter = require('./src/routes/db');
 var healthRouter = require('./src/routes/health');
+var addressesRouter = require('./src/routes/addresses');
+var householdsRouter = require('./src/routes/households');
+var householdMembersRouter = require('./src/routes/household-members');
+var tnttRouter = require('./src/routes/tntt');
+var tnttClassRouter = require('./src/routes/tntt-class');
+var tnttClassMemberRouter = require('./src/routes/tntt-class-member');
 
 var app = express();
 
@@ -26,12 +32,18 @@ app.use(cookieParser());
 app.use('/api/health', healthRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/db', dbRouter);
+app.use('/api/addresses', addressesRouter);
+app.use('/api/households', householdsRouter);
+app.use('/api/household-members', householdMembersRouter);
+app.use('/api/tntt/class-member', tnttClassMemberRouter);
+app.use('/api/tntt/class', tnttClassRouter);
+app.use('/api/tntt', tnttRouter);
 
 app.get('/', function(req, res) {
   res.json({
     ok: true,
     name: 'bndc-pms-be',
-    endpoints: ['/api/health', '/api/auth/token', '/api/db/query']
+    endpoints: ['/api/health', '/api/auth/token', '/api/db/query', '/api/addresses', '/api/households', '/api/tntt']
   });
 });
 
@@ -45,6 +57,8 @@ app.use(function(err, req, res, next) {
 
   res.status(status).json({
     ok: false,
+    code: status === 400 ? 'BAD_REQUEST' : status === 401 ? 'UNAUTHORIZED' : status === 403 ? 'FORBIDDEN' : status === 404 ? 'NOT_FOUND' : status === 409 ? 'CONFLICT' : 'INTERNAL_SERVER_ERROR',
+    message: expose ? err.message : 'Internal server error',
     error: {
       message: expose ? err.message : 'Internal server error',
       status: status

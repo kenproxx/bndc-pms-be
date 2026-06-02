@@ -41,6 +41,38 @@ If `configured` is `false`, set every key in `missingEnv` in Vercel Project Sett
 - `POST /api/auth/token`: exchanges `Authorization: Bearer <API_KEY>` or `{ "apiKey": "..." }` for a JWT.
 - `GET /api/auth/me`: validates API key or JWT bearer.
 - `POST /api/db/query`: protected SQL endpoint.
+- `GET /api/addresses`: lists addresses from the Swagger contract. Supports `parentId` and `tenDiaDanh`.
+- `POST /api/addresses`: creates an address from the Swagger contract.
+- `GET /api/households`: lists households from the Swagger contract. Supports `addressId` and `tenChuHo`.
+- `GET /api/household-members`: lists household members from the Swagger contract. Supports `householdId` and `personId`.
+- `GET /api/tntt`: lists TNTT units from the Swagger contract. Supports `addressLevelId`.
+- `GET /api/tntt/class`: lists TNTT classes from the Swagger contract. Supports `xuDoanId`, `nienHocId`, and `nganh`.
+- `GET /api/tntt/class-member`: lists TNTT class members from the Swagger contract. Supports `classId` and `personId`.
+- `GET /api/:resource`: lists a protected database resource.
+- `GET /api/:resource/:id`: gets one resource row by primary key.
+- `POST /api/:resource`: creates one resource row.
+- `PUT/PATCH /api/:resource/:id`: updates one resource row.
+- `DELETE /api/:resource/:id`: soft deletes one resource row. Add `?hard=true` for hard delete.
+
+Supported resources:
+
+- `address` / `addresses`
+- `baptismal_name` / `baptismal_names`
+- `class` / `classes`
+- `class_member` / `class_members`
+- `diem_danh`
+- `giao_ly_vien`
+- `household` / `households`
+- `household_member` / `household_members`
+- `linh_muc_doan`
+- `nien_hoc`
+- `person` / `persons` / `people`
+- `role` / `roles`
+- `tntt`
+- `user` / `users`
+- `user_role` / `user_roles`
+
+List endpoints support `limit`, `offset`, `sortBy`, `sortDir`, `includeDeleted=true`, and exact-match filters for any column, for example `/api/person?gioi_tinh=1&limit=20`.
 
 ## Structure
 

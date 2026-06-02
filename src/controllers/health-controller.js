@@ -1,4 +1,5 @@
 var dbService = require('../services/db-service');
+var config = require('../config');
 var sendOk = require('../utils/http').sendOk;
 
 function check(req, res) {
@@ -15,7 +16,16 @@ async function checkDb(req, res) {
   });
 }
 
+function checkConfig(req, res) {
+  sendOk(res, {
+    environment: config.nodeEnv,
+    configured: config.missingEnv.length === 0,
+    missingEnv: config.missingEnv
+  });
+}
+
 module.exports = {
   check: check,
-  checkDb: checkDb
+  checkDb: checkDb,
+  checkConfig: checkConfig
 };

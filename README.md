@@ -26,10 +26,17 @@ npm install
 npm run dev
 ```
 
+## Vercel
+
+After deploying, open `/api/health/config`.
+
+If `configured` is `false`, set every key in `missingEnv` in Vercel Project Settings, then redeploy. Missing env vars should not crash the whole function; protected auth/database routes will return JSON errors until configured.
+
 ## Routes
 
 - `GET /`: service info.
 - `GET /api/health`: service health.
+- `GET /api/health/config`: shows whether required Vercel env vars are configured.
 - `GET /api/health/db`: checks Turso with `select 1 as healthy`.
 - `POST /api/auth/token`: exchanges `Authorization: Bearer <API_KEY>` or `{ "apiKey": "..." }` for a JWT.
 - `GET /api/auth/me`: validates API key or JWT bearer.

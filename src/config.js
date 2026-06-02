@@ -1,14 +1,6 @@
-var requiredInProduction = ['API_KEY', 'JWT_SECRET', 'TURSO_DATABASE_URL', 'TURSO_AUTH_TOKEN'];
-
 var nodeEnv = process.env.NODE_ENV || 'development';
 
-if (nodeEnv === 'production') {
-  requiredInProduction.forEach(function(name) {
-    if (!process.env[name]) {
-      throw new Error('Missing required environment variable: ' + name);
-    }
-  });
-}
+var requiredEnv = ['API_KEY', 'JWT_SECRET', 'TURSO_DATABASE_URL', 'TURSO_AUTH_TOKEN'];
 
 function parseBoolean(value, defaultValue) {
   if (value === undefined || value === null || value === '') return defaultValue;
@@ -24,6 +16,10 @@ function parseCorsOrigin(value) {
 
 module.exports = {
   nodeEnv: nodeEnv,
+  requiredEnv: requiredEnv,
+  missingEnv: requiredEnv.filter(function(name) {
+    return !process.env[name];
+  }),
   apiKey: process.env.API_KEY || '',
   jwtSecret: process.env.JWT_SECRET || process.env.API_KEY || '',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',

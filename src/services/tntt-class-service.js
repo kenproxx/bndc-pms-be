@@ -12,6 +12,20 @@ async function list(query) {
   appendFilter(where, args, 'c.id_xu_doan', query.xuDoanId);
   appendFilter(where, args, 'c.id_nien_hoc', query.nienHocId);
   appendFilter(where, args, 'c.nganh', query.nganh);
+  if (query.q) {
+    where.push('(c.ten_lop like ? or t.ten_goi like ? or nh.ten_nien_hoc like ? or ' +
+      personName('cn') + ' like ? or ' + personName('g1') + ' like ? or ' +
+      personName('g2') + ' like ? or ' + personName('g3') + ' like ?)');
+    args.push(
+      '%' + query.q + '%',
+      '%' + query.q + '%',
+      '%' + query.q + '%',
+      '%' + query.q + '%',
+      '%' + query.q + '%',
+      '%' + query.q + '%',
+      '%' + query.q + '%'
+    );
+  }
 
   var fromSql = 'from class c ' +
     'left join tntt t on t.id = c.id_xu_doan ' +

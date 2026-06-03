@@ -48,36 +48,16 @@ If `configured` is `false`, set every key in `missingEnv` in Vercel Project Sett
 - `POST /api/auth/token`: exchanges `Authorization: Bearer <API_KEY>` or `{ "apiKey": "..." }` for a JWT.
 - `GET /api/auth/me`: validates API key, JWT bearer, or login cookie.
 - `POST /api/db/query`: protected SQL endpoint.
-- `GET /api/addresses`: lists addresses from the Swagger contract. Supports `parentId` and `tenDiaDanh`.
+- `GET /api/addresses`: lists addresses from the Swagger contract. Supports `parentId`, `tenDiaDanh`, and `q`.
 - `POST /api/addresses`: creates an address from the Swagger contract.
-- `GET /api/households`: lists households from the Swagger contract. Supports `addressId` and `tenChuHo`.
-- `GET /api/household-members`: lists household members from the Swagger contract. Supports `householdId` and `personId`.
-- `GET /api/tntt`: lists TNTT units from the Swagger contract. Supports `addressLevelId`.
-- `GET /api/tntt/class`: lists TNTT classes from the Swagger contract. Supports `xuDoanId`, `nienHocId`, and `nganh`.
-- `GET /api/tntt/class-member`: lists TNTT class members from the Swagger contract. Supports `classId` and `personId`.
-- `GET /api/:resource`: lists a protected database resource.
-- `GET /api/:resource/:id`: gets one resource row by primary key.
-- `POST /api/:resource`: creates one resource row.
-- `PUT/PATCH /api/:resource/:id`: updates one resource row.
-- `DELETE /api/:resource/:id`: soft deletes one resource row. Add `?hard=true` for hard delete.
-
-Supported resources:
-
-- `address` / `addresses`
-- `baptismal_name` / `baptismal_names`
-- `class` / `classes`
-- `class_member` / `class_members`
-- `diem_danh`
-- `giao_ly_vien`
-- `household` / `households`
-- `household_member` / `household_members`
-- `linh_muc_doan`
-- `nien_hoc`
-- `person` / `persons` / `people`
-- `role` / `roles`
-- `tntt`
-- `user` / `users`
-- `user_role` / `user_roles`
+- `GET /api/households`: lists households from the Swagger contract. Supports `addressId`, `tenChuHo`, and `q`.
+- `GET /api/household-members`: lists household members from the Swagger contract. Supports `householdId`, `personId`, and `q`.
+- `GET /api/nienhoc`: lists school years from the Swagger contract. Supports `q`.
+- `POST /api/nienhoc`: creates a school year from the Swagger contract.
+- `GET /api/person`: finds people from the Swagger contract. Supports `q`.
+- `GET /api/tntt`: lists TNTT units from the Swagger contract. Supports `addressLevelId` and `q`.
+- `GET /api/tntt/class`: lists TNTT classes from the Swagger contract. Supports `xuDoanId`, `nienHocId`, `nganh`, and `q`.
+- `GET /api/tntt/class-member`: lists TNTT class members from the Swagger contract. Supports `classId`, `personId`, and `q`.
 
 List/search endpoints return paged results:
 

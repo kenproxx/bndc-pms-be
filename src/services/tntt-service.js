@@ -9,6 +9,10 @@ async function list(query) {
   var pagination = parsePagination(query);
 
   appendFilter(where, args, 't.dia_chi_cap_bac', query.addressLevelId);
+  if (query.q) {
+    where.push('(t.ten_goi like ? or t.tuyen_uy like ? or t.thong_tin_ban_dieu_hanh like ?)');
+    args.push('%' + query.q + '%', '%' + query.q + '%', '%' + query.q + '%');
+  }
 
   var fromSql = 'from tntt t where ' + where.join(' and ');
   var countResult = await execute('select count(*) as total ' + fromSql, args);

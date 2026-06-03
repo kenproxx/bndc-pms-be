@@ -14,6 +14,10 @@ async function list(query) {
     where.push(personName('head') + ' like ?');
     args.push('%' + query.tenChuHo + '%');
   }
+  if (query.q) {
+    where.push('(' + personName('head') + ' like ? or a.ten_dia_danh like ? or h.ghi_chu like ?)');
+    args.push('%' + query.q + '%', '%' + query.q + '%', '%' + query.q + '%');
+  }
 
   var fromSql = 'from household h ' +
     'left join address a on a.id = h.id_dia_chi ' +

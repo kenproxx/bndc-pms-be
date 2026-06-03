@@ -1,5 +1,6 @@
 var execute = require('../db/turso').execute;
 var appendFilter = require('./api-helpers').appendFilter;
+var personName = require('./api-helpers').personName;
 var parsePagination = require('./api-helpers').parsePagination;
 var toPagedResponse = require('./api-helpers').toPagedResponse;
 
@@ -10,6 +11,10 @@ async function list(query) {
 
   appendFilter(where, args, 'hm.household_id', query.householdId);
   appendFilter(where, args, 'hm.person_id', query.personId);
+  if (query.q) {
+    where.push(personName('') + ' like ?');
+    args.push('%' + query.q + '%');
+  }
 
   var fromSql = 'from household_member hm ' +
     'join person p on p.id = hm.person_id ' +

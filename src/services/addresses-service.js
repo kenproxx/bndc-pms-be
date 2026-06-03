@@ -12,6 +12,10 @@ async function list(query) {
 
   appendFilter(where, args, 'a.id_parent', query.parentId);
   appendFilter(where, args, 'a.ten_dia_danh', query.tenDiaDanh);
+  if (query.q) {
+    where.push('(a.ten_dia_danh like ? or a.code like ?)');
+    args.push('%' + query.q + '%', '%' + query.q + '%');
+  }
 
   var countResult = await execute(
     'select count(*) as total from address a where ' + where.join(' and '),

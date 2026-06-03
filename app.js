@@ -16,6 +16,8 @@ var healthRouter = require('./src/routes/health');
 var addressesRouter = require('./src/routes/addresses');
 var householdsRouter = require('./src/routes/households');
 var householdMembersRouter = require('./src/routes/household-members');
+var nienhocRouter = require('./src/routes/nienhoc');
+var personRouter = require('./src/routes/person');
 var tnttRouter = require('./src/routes/tntt');
 var tnttClassRouter = require('./src/routes/tntt-class');
 var tnttClassMemberRouter = require('./src/routes/tntt-class-member');
@@ -37,6 +39,8 @@ app.use('/api/db', dbRouter);
 app.use('/api/addresses', addressesRouter);
 app.use('/api/households', householdsRouter);
 app.use('/api/household-members', householdMembersRouter);
+app.use('/api/nienhoc', nienhocRouter);
+app.use('/api/person', personRouter);
 app.use('/api/tntt/class-member', tnttClassMemberRouter);
 app.use('/api/tntt/class', tnttClassRouter);
 app.use('/api/tntt', tnttRouter);
@@ -45,7 +49,7 @@ app.get('/', function(req, res) {
   res.json({
     ok: true,
     name: 'bndc-pms-be',
-    endpoints: ['/api/health', '/api/account', '/api/auth/login', '/api/auth/token', '/api/db/query', '/api/addresses', '/api/households', '/api/tntt']
+    endpoints: ['/api/health', '/api/account', '/api/auth/login', '/api/auth/token', '/api/db/query', '/api/addresses', '/api/households', '/api/household-members', '/api/nienhoc', '/api/person', '/api/tntt']
   });
 });
 

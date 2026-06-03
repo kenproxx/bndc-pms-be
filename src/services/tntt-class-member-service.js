@@ -1,5 +1,6 @@
 var execute = require('../db/turso').execute;
 var appendFilter = require('./api-helpers').appendFilter;
+var personName = require('./api-helpers').personName;
 var parsePagination = require('./api-helpers').parsePagination;
 var toPagedResponse = require('./api-helpers').toPagedResponse;
 
@@ -10,6 +11,10 @@ async function list(query) {
 
   appendFilter(where, args, 'cm.class_id', query.classId);
   appendFilter(where, args, 'cm.person_id', query.personId);
+  if (query.q) {
+    where.push('(' + personName('') + ' like ? or c.ten_lop like ?)');
+    args.push('%' + query.q + '%', '%' + query.q + '%');
+  }
 
   var fromSql = 'from class_member cm ' +
     'join person p on p.id = cm.person_id ' +

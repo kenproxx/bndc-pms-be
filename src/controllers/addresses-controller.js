@@ -8,7 +8,13 @@ async function create(req, res) {
   res.status(201).json(await addressesService.create(req.body));
 }
 
+async function save(req, res) {
+  var result = await addressesService.save(req.body);
+  res.status(result.created ? 201 : 200).json(result.item);
+}
+
 module.exports = {
   list: list,
-  create: create
+  create: create,
+  save: save
 };

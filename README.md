@@ -48,6 +48,7 @@ If `configured` is `false`, set every key in `missingEnv` in Vercel Project Sett
 - `POST /api/auth/token`: exchanges `Authorization: Bearer <API_KEY>` or `{ "apiKey": "..." }` for a JWT.
 - `GET /api/auth/me`: validates API key, JWT bearer, or login cookie.
 - `POST /api/db/query`: protected SQL endpoint.
+- `PUT /api/address`: creates or updates an address. Body: `{ "id": "...", "tenDiaDanh": "...", "capBac": 1, "idParent": "...", "tenVietTat": "AB" }`. Use `id` to identify the address when editing; if `id` is missing or not found, it creates a new address.
 - `GET /api/addresses`: lists addresses from the Swagger contract. Supports `parentId`, `cap_bac`, `tenDiaDanh`, and `q`.
 - `POST /api/addresses`: creates an address from the Swagger contract.
 - `GET /api/households`: lists households from the Swagger contract. Supports `addressId`, `tenChuHo`, and `q`.

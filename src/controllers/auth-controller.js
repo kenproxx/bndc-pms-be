@@ -42,6 +42,7 @@ function login(req, res) {
     expiresInSeconds: session.expiresInSeconds,
     expiresAt: session.expiresAt,
     refreshToken: {
+      token: session.refreshToken,
       cookieName: config.auth.refreshCookieName,
       expiresIn: session.refreshExpiresIn,
       expiresInSeconds: session.refreshExpiresInSeconds,

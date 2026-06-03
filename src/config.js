@@ -14,6 +14,11 @@ function parseCorsOrigin(value) {
   }).filter(Boolean);
 }
 
+function parseInteger(value, defaultValue) {
+  var parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : defaultValue;
+}
+
 module.exports = {
   nodeEnv: nodeEnv,
   requiredEnv: requiredEnv,
@@ -31,6 +36,9 @@ module.exports = {
     role: process.env.AUTH_ROLE || 'admin',
     cookieName: process.env.AUTH_COOKIE_NAME || 'access_token',
     refreshCookieName: process.env.AUTH_REFRESH_COOKIE_NAME || 'refresh_token'
+  },
+  account: {
+    passwordSaltRounds: parseInteger(process.env.ACCOUNT_PASSWORD_SALT_ROUNDS || 12, 12)
   },
   turso: {
     url: process.env.TURSO_DATABASE_URL || '',

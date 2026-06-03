@@ -23,6 +23,7 @@ Optional:
 - `AUTH_ROLE`: role claim for login JWTs, default `admin`.
 - `AUTH_COOKIE_NAME`: HttpOnly auth cookie name, default `access_token`.
 - `AUTH_REFRESH_COOKIE_NAME`: HttpOnly refresh cookie name, default `refresh_token`.
+- `ACCOUNT_PASSWORD_SALT_ROUNDS`: bcrypt salt rounds for account passwords, default `12`.
 - `CORS_ORIGIN`: `*` or comma-separated origins.
 - `ALLOW_WRITE_SQL`: default `false`. When false, `/api/db/query` only accepts `SELECT`, `WITH`, and `PRAGMA`.
 
@@ -45,6 +46,7 @@ If `configured` is `false`, set every key in `missingEnv` in Vercel Project Sett
 - `GET /api/health`: service health.
 - `GET /api/health/config`: shows whether required Vercel env vars are configured.
 - `GET /api/health/db`: checks Turso with `select 1 as healthy`.
+- `POST /api/account`: creates a user account with bcrypt password hash. Body: `{ "username": "...", "password": "...", "addressId": "...", "createdBy": "..." }`.
 - `POST /api/auth/login`: exchanges `{ "username": "...", "password": "..." }` for a JWT and sets an HttpOnly cookie.
 - `POST /api/auth/token`: exchanges `Authorization: Bearer <API_KEY>` or `{ "apiKey": "..." }` for a JWT.
 - `GET /api/auth/me`: validates API key, JWT bearer, or login cookie.

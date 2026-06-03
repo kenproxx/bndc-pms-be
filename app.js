@@ -9,6 +9,7 @@ var logger = require('morgan');
 var cors = require('cors');
 
 var config = require('./src/config');
+var accountRouter = require('./src/routes/account');
 var authRouter = require('./src/routes/auth');
 var dbRouter = require('./src/routes/db');
 var healthRouter = require('./src/routes/health');
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/api/health', healthRouter);
+app.use('/api/account', accountRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/db', dbRouter);
 app.use('/api/addresses', addressesRouter);
@@ -43,7 +45,7 @@ app.get('/', function(req, res) {
   res.json({
     ok: true,
     name: 'bndc-pms-be',
-    endpoints: ['/api/health', '/api/auth/login', '/api/auth/token', '/api/db/query', '/api/addresses', '/api/households', '/api/tntt']
+    endpoints: ['/api/health', '/api/account', '/api/auth/login', '/api/auth/token', '/api/db/query', '/api/addresses', '/api/households', '/api/tntt']
   });
 });
 

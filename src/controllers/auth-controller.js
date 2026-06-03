@@ -41,14 +41,6 @@ function login(req, res) {
     expiresIn: session.expiresIn,
     expiresInSeconds: session.expiresInSeconds,
     expiresAt: session.expiresAt,
-    refreshToken: {
-      token: session.refreshToken,
-      cookieName: config.auth.refreshCookieName,
-      expiresIn: session.refreshExpiresIn,
-      expiresInSeconds: session.refreshExpiresInSeconds,
-      expiresAt: session.refreshExpiresAt,
-      httpOnly: true
-    },
     user: session.user
   });
 }

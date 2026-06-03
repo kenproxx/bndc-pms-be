@@ -88,6 +88,28 @@ function verifyBearerToken(token) {
   }
 }
 
+function verifyJwtToken(token) {
+  if (!token) {
+    throw createError(401, 'Missing Authorization bearer token');
+  }
+
+  if (!config.jwtSecret) {
+    throw createError(401, 'JWT is not configured');
+  }
+
+  try {
+    var payload = jwt.verify(token, config.jwtSecret);
+
+    return {
+      type: 'jwt',
+      sub: payload.sub,
+      payload: payload
+    };
+  } catch (error) {
+    throw createError(401, 'Invalid bearer token');
+  }
+}
+
 function createTokenFromApiKey(apiKey) {
   if (!config.apiKey || apiKey !== config.apiKey) {
     throw createError(401, 'Invalid API key');
@@ -172,6 +194,7 @@ async function createLoginSession(username, password) {
 
 module.exports = {
   verifyBearerToken: verifyBearerToken,
+  verifyJwtToken: verifyJwtToken,
   createTokenFromApiKey: createTokenFromApiKey,
   createLoginSession: createLoginSession,
   parseExpiresInSeconds: parseExpiresInSeconds

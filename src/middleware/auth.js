@@ -1,13 +1,9 @@
 var authService = require('../services/auth-service');
-var config = require('../config');
 var getBearerToken = require('../utils/request').getBearerToken;
-var getCookieToken = require('../utils/request').getCookieToken;
 
 function ensureAuth(req, res, next) {
   try {
-    req.auth = authService.verifyBearerToken(
-      getBearerToken(req) || getCookieToken(req, config.auth.cookieName)
-    );
+    req.auth = authService.verifyJwtToken(getBearerToken(req));
     return next();
   } catch (error) {
     return next(error);

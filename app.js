@@ -21,6 +21,7 @@ var personRouter = require('./src/routes/person');
 var tnttRouter = require('./src/routes/tntt');
 var tnttClassRouter = require('./src/routes/tntt-class');
 var tnttClassMemberRouter = require('./src/routes/tntt-class-member');
+var ensureAuth = require('./src/middleware/auth').ensureAuth;
 
 var app = express();
 
@@ -33,17 +34,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/api/health', healthRouter);
-app.use('/api/account', accountRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/db', dbRouter);
-app.use('/api/addresses', addressesRouter);
-app.use('/api/households', householdsRouter);
-app.use('/api/household-members', householdMembersRouter);
-app.use('/api/nienhoc', nienhocRouter);
-app.use('/api/person', personRouter);
-app.use('/api/tntt/class-member', tnttClassMemberRouter);
-app.use('/api/tntt/class', tnttClassRouter);
-app.use('/api/tntt', tnttRouter);
+app.use('/api/account', ensureAuth, accountRouter);
+app.use('/api/db', ensureAuth, dbRouter);
+app.use('/api/addresses', ensureAuth, addressesRouter);
+app.use('/api/households', ensureAuth, householdsRouter);
+app.use('/api/household-members', ensureAuth, householdMembersRouter);
+app.use('/api/nienhoc', ensureAuth, nienhocRouter);
+app.use('/api/person', ensureAuth, personRouter);
+app.use('/api/tntt/class-member', ensureAuth, tnttClassMemberRouter);
+app.use('/api/tntt/class', ensureAuth, tnttClassRouter);
+app.use('/api/tntt', ensureAuth, tnttRouter);
 
 app.get('/', function(req, res) {
   res.json({

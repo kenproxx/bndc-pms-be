@@ -43,7 +43,7 @@ app.get('/', function(req, res) {
   res.json({
     ok: true,
     name: 'bndc-pms-be',
-    endpoints: ['/api/health', '/api/auth/token', '/api/db/query', '/api/addresses', '/api/households', '/api/tntt']
+    endpoints: ['/api/health', '/api/auth/login', '/api/auth/token', '/api/db/query', '/api/addresses', '/api/households', '/api/tntt']
   });
 });
 

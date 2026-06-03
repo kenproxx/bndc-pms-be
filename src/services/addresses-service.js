@@ -2,20 +2,27 @@ var createError = require('http-errors');
 var execute = require('../db/turso').execute;
 var appendFilter = require('./api-helpers').appendFilter;
 var makeId = require('./api-helpers').makeId;
+var parsePagination = require('./api-helpers').parsePagination;
+var toPagedResponse = require('./api-helpers').toPagedResponse;
 
 async function list(query) {
   var where = ['a.deleted_at is null'];
   var args = [];
+  var pagination = parsePagination(query);
 
   appendFilter(where, args, 'a.id_parent', query.parentId);
   appendFilter(where, args, 'a.ten_dia_danh', query.tenDiaDanh);
 
-  var result = await execute(
-    'select a.* from address a where ' + where.join(' and ') + ' order by a.cap_bac, a.ten_dia_danh',
+  var countResult = await execute(
+    'select count(*) as total from address a where ' + where.join(' and '),
     args
   );
+  var result = await execute(
+    'select a.* from address a where ' + where.join(' and ') + ' order by a.cap_bac, a.ten_dia_danh limit ? offset ?',
+    args.concat([pagination.limit, pagination.offset])
+  );
 
-  return result.rows;
+  return toPagedResponse(result.rows, countResult.rows[0].total, pagination);
 }
 
 function validateCreate(input) {

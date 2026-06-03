@@ -4,6 +4,12 @@ function getBearerToken(req) {
   return match ? match[1].trim() : '';
 }
 
+function getCookieToken(req, cookieName) {
+  if (!req.cookies || !cookieName) return '';
+  return req.cookies[cookieName] || '';
+}
+
 module.exports = {
-  getBearerToken: getBearerToken
+  getBearerToken: getBearerToken,
+  getCookieToken: getCookieToken
 };

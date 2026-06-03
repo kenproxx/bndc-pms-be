@@ -15,7 +15,14 @@ Required in production:
 
 Optional:
 
-- `JWT_EXPIRES_IN`: default `7d`.
+- `JWT_EXPIRES_IN`: access token lifetime, default `15m`.
+- `JWT_REFRESH_EXPIRES_IN`: refresh token lifetime, default `30d`.
+- `AUTH_USERNAME`: username for `POST /api/auth/login`.
+- `AUTH_PASSWORD`: plaintext password for local/dev login.
+- `AUTH_PASSWORD_SHA256`: SHA-256 hex password hash. Prefer this over `AUTH_PASSWORD` in production.
+- `AUTH_ROLE`: role claim for login JWTs, default `admin`.
+- `AUTH_COOKIE_NAME`: HttpOnly auth cookie name, default `access_token`.
+- `AUTH_REFRESH_COOKIE_NAME`: HttpOnly refresh cookie name, default `refresh_token`.
 - `CORS_ORIGIN`: `*` or comma-separated origins.
 - `ALLOW_WRITE_SQL`: default `false`. When false, `/api/db/query` only accepts `SELECT`, `WITH`, and `PRAGMA`.
 
@@ -38,8 +45,9 @@ If `configured` is `false`, set every key in `missingEnv` in Vercel Project Sett
 - `GET /api/health`: service health.
 - `GET /api/health/config`: shows whether required Vercel env vars are configured.
 - `GET /api/health/db`: checks Turso with `select 1 as healthy`.
+- `POST /api/auth/login`: exchanges `{ "username": "...", "password": "..." }` for a JWT and sets an HttpOnly cookie.
 - `POST /api/auth/token`: exchanges `Authorization: Bearer <API_KEY>` or `{ "apiKey": "..." }` for a JWT.
-- `GET /api/auth/me`: validates API key or JWT bearer.
+- `GET /api/auth/me`: validates API key, JWT bearer, or login cookie.
 - `POST /api/db/query`: protected SQL endpoint.
 - `GET /api/addresses`: lists addresses from the Swagger contract. Supports `parentId` and `tenDiaDanh`.
 - `POST /api/addresses`: creates an address from the Swagger contract.
@@ -72,7 +80,19 @@ Supported resources:
 - `user` / `users`
 - `user_role` / `user_roles`
 
-List endpoints support `limit`, `offset`, `sortBy`, `sortDir`, `includeDeleted=true`, and exact-match filters for any column, for example `/api/person?gioi_tinh=1&limit=20`.
+List/search endpoints return paged results:
+
+```json
+{
+  "total": 42,
+  "page": 1,
+  "limit": 20,
+  "offset": 0,
+  "items": []
+}
+```
+
+They support `page`, `limit`, `offset`, and endpoint-specific filters, for example `/api/addresses?parentId=abc&limit=20`.
 
 ## Structure
 
@@ -99,6 +119,14 @@ Exchange API key for JWT:
 ```bash
 curl -X POST http://localhost:3000/api/auth/token \
   -H "Authorization: Bearer $API_KEY"
+```
+
+Login with username/password:
+
+```bash
+curl -i -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d "{\"username\":\"admin\",\"password\":\"change-me-password\"}"
 ```
 
 Then use the returned JWT:

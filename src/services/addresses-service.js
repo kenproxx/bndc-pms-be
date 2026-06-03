@@ -11,6 +11,7 @@ async function list(query) {
   var pagination = parsePagination(query);
 
   appendFilter(where, args, 'a.id_parent', query.parentId);
+  appendFilter(where, args, 'a.cap_bac', query.cap_bac);
   appendFilter(where, args, 'a.ten_dia_danh', query.tenDiaDanh);
   if (query.q) {
     where.push('(a.ten_dia_danh like ? or a.code like ?)');

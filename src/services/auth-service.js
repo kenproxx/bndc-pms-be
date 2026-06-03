@@ -133,6 +133,7 @@ function createLoginSession(username, password) {
   }
 
   var user = getUserFromUsername(username);
+  // Config accesstoken hash tai day
   var accessToken = jwt.sign(
     {
       scope: authConstants.JWT_SCOPE_AUTH,

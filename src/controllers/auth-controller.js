@@ -25,9 +25,9 @@ function issueToken(req, res) {
   sendOk(res, token);
 }
 
-function login(req, res) {
+async function login(req, res) {
   var body = req.body || {};
-  var session = authService.createLoginSession(body.username, body.password);
+  var session = await authService.createLoginSession(body.username, body.password);
 
   res.cookie(config.auth.cookieName, session.accessToken, getCookieOptions(session.expiresInSeconds));
   res.cookie(

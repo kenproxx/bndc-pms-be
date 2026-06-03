@@ -17,9 +17,6 @@ Optional:
 
 - `JWT_EXPIRES_IN`: access token lifetime, default `15m`.
 - `JWT_REFRESH_EXPIRES_IN`: refresh token lifetime, default `30d`.
-- `AUTH_USERNAME`: username for `POST /api/auth/login`.
-- `AUTH_PASSWORD`: plaintext password for local/dev login.
-- `AUTH_PASSWORD_SHA256`: SHA-256 hex password hash. Prefer this over `AUTH_PASSWORD` in production.
 - `AUTH_ROLE`: role claim for login JWTs, default `admin`.
 - `AUTH_COOKIE_NAME`: HttpOnly auth cookie name, default `access_token`.
 - `AUTH_REFRESH_COOKIE_NAME`: HttpOnly refresh cookie name, default `refresh_token`.
@@ -128,7 +125,7 @@ Login with username/password:
 ```bash
 curl -i -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d "{\"username\":\"admin\",\"password\":\"change-me-password\"}"
+  -d "{\"username\":\"demo\",\"password\":\"secret\"}"
 ```
 
 Then use the returned JWT:

@@ -1,26 +1,11 @@
 var createError = require('http-errors');
-var crypto = require('crypto');
+var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 var authConstants = require('../constants/auth');
-
-function hashSha256(value) {
-  return crypto.createHash('sha256').update(String(value)).digest('hex');
-}
-
-function safeEqual(value, expected) {
-  var valueBuffer = Buffer.from(String(value));
-  var expectedBuffer = Buffer.from(String(expected));
-
-  if (valueBuffer.length !== expectedBuffer.length) return false;
-  return crypto.timingSafeEqual(valueBuffer, expectedBuffer);
-}
+var execute = require('../db/turso').execute;
 
 function assertLoginConfigured() {
-  if (!config.auth.username || (!config.auth.password && !config.auth.passwordSha256)) {
-    throw createError(500, 'Username/password auth is not configured');
-  }
-
   if (!config.jwtSecret) {
     throw createError(500, 'JWT_SECRET is not configured');
   }
@@ -49,13 +34,28 @@ function formatExpiresAt(token) {
   return payload && payload.exp ? new Date(payload.exp * 1000).toISOString() : null;
 }
 
-function getUserFromUsername(username) {
-  var uid = hashSha256(username).slice(0, 24);
+async function getUserFromUsername(username) {
+  var result = await execute(
+    'select u.id, u.username, u.password_hash, u.address_id, t.id as tntt_id ' +
+      'from "user" u ' +
+      'left join tntt t on t.dia_chi_cap_bac = u.address_id and t.deleted_at is null ' +
+      'where u.username = ? and u.deleted_at is null ' +
+      'limit 1',
+    [username]
+  );
+  var row = result.rows[0];
+
+  if (!row) {
+    throw createError(401, 'Invalid username or password');
+  }
 
   return {
-    id: uid,
-    username: username,
-    role: config.auth.role
+    id: row.id,
+    username: row.username,
+    passwordHash: row.password_hash,
+    role: config.auth.role,
+    addressId: row.address_id,
+    tnttId: row.tntt_id
   };
 }
 
@@ -113,33 +113,24 @@ function createTokenFromApiKey(apiKey) {
   };
 }
 
-function createLoginSession(username, password) {
+async function createLoginSession(username, password) {
   assertLoginConfigured();
 
   if (!username || !password) {
     throw createError(400, 'username and password are required');
   }
 
-  if (!safeEqual(username, config.auth.username)) {
+  var user = await getUserFromUsername(username);
+  var validPassword = await bcrypt.compare(password, user.passwordHash);
+  if (!validPassword) {
     throw createError(401, 'Invalid username or password');
   }
 
-  if (config.auth.passwordSha256) {
-    if (!safeEqual(hashSha256(password), config.auth.passwordSha256)) {
-      throw createError(401, 'Invalid username or password');
-    }
-  } else if (!safeEqual(password, config.auth.password)) {
-    throw createError(401, 'Invalid username or password');
-  }
-
-  var user = getUserFromUsername(username);
-  // Config accesstoken hash tai day
   var accessToken = jwt.sign(
     {
       scope: authConstants.JWT_SCOPE_AUTH,
       username: user.username,
-      role: user.role,
-      uid: user.id
+      uid: user.id,
     },
     config.jwtSecret,
     {
@@ -169,7 +160,13 @@ function createLoginSession(username, password) {
     refreshExpiresIn: config.jwtRefreshExpiresIn,
     refreshExpiresInSeconds: parseExpiresInSeconds(config.jwtRefreshExpiresIn),
     refreshExpiresAt: formatExpiresAt(refreshToken),
-    user: user
+    user: {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      addressId: user.addressId,
+      tnttId: user.tnttId,
+    }
   };
 }
 

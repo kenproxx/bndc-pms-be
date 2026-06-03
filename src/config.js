@@ -30,9 +30,6 @@ module.exports = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '15m',
   jwtRefreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
   auth: {
-    username: process.env.AUTH_USERNAME || '',
-    password: process.env.AUTH_PASSWORD || '',
-    passwordSha256: process.env.AUTH_PASSWORD_SHA256 || '',
     role: process.env.AUTH_ROLE || 'admin',
     cookieName: process.env.AUTH_COOKIE_NAME || 'access_token',
     refreshCookieName: process.env.AUTH_REFRESH_COOKIE_NAME || 'refresh_token'

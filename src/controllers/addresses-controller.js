@@ -13,8 +13,13 @@ async function save(req, res) {
   res.status(result.created ? 201 : 200).json(result.item);
 }
 
+async function remove(req, res) {
+  res.json(await addressesService.remove(req.query.id, req.auth && req.auth.sub));
+}
+
 module.exports = {
   list: list,
   create: create,
-  save: save
+  save: save,
+  remove: remove
 };

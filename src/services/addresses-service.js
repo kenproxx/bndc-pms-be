@@ -142,8 +142,32 @@ async function save(input) {
   };
 }
 
+async function remove(id, deletedBy) {
+  if (!id || typeof id !== 'string' || id.trim() === '') {
+    throw createError(400, 'id query param is required');
+  }
+
+  var normalizedId = id.trim();
+  var normalizedDeletedBy = deletedBy || null;
+
+  var result = await execute(
+    'update address set deleted_at = current_timestamp, deleted_by = ? where id = ? and deleted_at is null',
+    [normalizedDeletedBy, normalizedId]
+  );
+
+  if (result.rowsAffected === 0) {
+    throw createError(404, 'Address not found');
+  }
+
+  return {
+    ok: true,
+    id: normalizedId
+  };
+}
+
 module.exports = {
   list: list,
   create: create,
-  save: save
+  save: save,
+  remove: remove
 };
